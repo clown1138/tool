@@ -34,12 +34,15 @@
 /* --- 分頁佈局 (/tools, /games 時) --- */
 .pageLayout {
     display: grid;
-    /* 定義網格區域: header | sidebar content */
     grid-template-areas: 
         "header header"
         "sidebar content";
     grid-template-rows: 60px 1fr;
     min-height: 100vh;
+    
+    /* 這是預設狀態：開啟時的寬度 */
+    grid-template-columns: 250px 1fr; 
+    transition: grid-template-columns 0.3s ease; /* 啟用伸縮動畫 */
 }
 
 /* 側邊欄樣式 */
@@ -47,16 +50,17 @@
     grid-area: sidebar;
     background-color: #f4f4f4;
     overflow-y: auto;
-    width: 250px; /* 桌面預設寬度 */
+    /* ⬇️ 關鍵：使用寬度百分比確保 CSS Grid 控制寬度 ⬇️ */
+    width: 100%; 
     transition: width 0.3s, transform 0.3s;
 }
-
-/* 側邊欄 開/關 狀態控制 */
+/* 側邊欄 開啟狀態  */
 .sidebarOpen {
-    grid-template-columns: 250px 1fr; /* 桌面：展開 */
+    grid-template-columns: 250px 1fr;
 }
+/* 側邊欄 關閉狀態 */
 .sidebarClosed {
-    grid-template-columns: 0 1fr; /* 桌面：隱藏 (寬度為 0) */
+    grid-template-columns: 0 1fr; 
 }
 
 /* 內容區 */
@@ -79,39 +83,36 @@
 
 
 /* === 手機版 (RWD) 樣式 === */
-
 @media (max-width: 768px) {
-    
-    /* --- 首頁佈局 (不變) --- */
-    
-    /* --- 分頁佈局 --- */
+    /* 手機分頁不再使用 grid-template-areas "sidebar content" */
     .pageLayout {
-        /* 手機分頁：側邊欄始終隱藏在內容下方 */
         grid-template-areas: 
             "header"
             "content";
         grid-template-columns: 1fr;
     }
     
-    /* 側邊欄樣式 (手機版變成疊加在內容上方的抽屜) */
+    /* 側邊欄樣式 (手機版抽屜) */
     .sidebar {
         position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
-        width: 70%; /* 手機展開寬度 */
+        width: 70%; 
         z-index: 1000;
         box-shadow: 2px 0 5px rgba(0,0,0,0.5);
-        transform: translateX(-100%); /* 預設完全隱藏 */
-    }
-
-    /* 手機側邊欄展開狀態 */
-    .sidebarOpen .sidebar {
-        transform: translateX(0);
+        /* ⬇️ 預設隱藏在螢幕外 ⬇️ */
+        transform: translateX(-100%); 
+        transition: transform 0.3s ease-out;
     }
     
-    /* 手機模式下，內容區沒有邊距，且不需要 grid-area */
-    .pageContent {
-        padding: 15px;
+    /* 手機側邊欄開啟狀態 */
+    .sidebar.open {
+        transform: translateX(0); /* 移入螢幕內 */
+    }
+    
+    /* 手機模式下，header 的切換按鈕必須顯示 */
+    .sidebarToggleBtn {
+        display: block; 
     }
 }
