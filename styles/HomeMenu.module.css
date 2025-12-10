@@ -1,0 +1,88 @@
+/* styles/HomeMenu.module.css */
+
+.homeMenuContainer {
+    width: 100%;
+    max-width: 800px; /* 限制最大寬度，避免在電腦螢幕上過寬 */
+    padding: 20px;
+    text-align: center; /* 內容居中 */
+}
+
+.title {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* --- 第一層樣式 --- */
+.level1List {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* 一級分類在桌面居中排列 */
+    gap: 30px;
+}
+
+.level1Item {
+    flex: 1; /* 讓每個一級項目平均分配空間 */
+    min-width: 200px;
+    max-width: 250px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.level1Title {
+    font-size: 1.5em;
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* --- 第二層樣式 --- */
+.level2List {
+    list-style: none;
+    padding: 0;
+}
+
+.level2Item {
+    margin-bottom: 5px;
+}
+
+.level2Link {
+    display: block;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #555;
+    background-color: #fff;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.level2Link:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* === RWD 修正 (手機時垂直堆疊) === */
+@media (max-width: 768px) {
+    .level1List {
+        flex-direction: column; /* 手機上垂直堆疊 */
+        gap: 20px;
+    }
+
+    .level1Item {
+        max-width: 100%;
+        min-width: auto;
+    }
+}

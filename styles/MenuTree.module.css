@@ -1,0 +1,111 @@
+/* styles/MenuTree.module.css */
+
+.menuNav {
+    padding: 20px 0;
+}
+
+.level1Item {
+    list-style: none;
+    margin-bottom: 5px;
+}
+
+.level1Link {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #333;
+    transition: background-color 0.2s;
+    /* 移除 cursor: pointer; 因為點擊行為將由內部元素控制 */
+}
+.level1Link:hover {
+    background-color: #e0e0e0;
+}
+
+.level1Link span:first-child {
+    margin-right: 10px;
+}
+
+/* 連結文字 */
+.level1Link a,
+.level1TextWrapper {
+    flex-grow: 1; 
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer; /* 讓文字區域可以點擊 */
+}
+
+/* 針對沒有子項目的 Link 樣式 */
+.level1LinkOnly {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* 這裡需要處理 Link 填滿整個 level1Link 區域 */
+}
+/* 第二層收合/展開 */
+.level2 {
+    max-height: 0;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    transition: max-height 0.3s ease-out;
+}
+.level2.open {
+    max-height: 500px; /* 設置一個足夠大的高度來模擬展開動畫 */
+}
+.level2 li {
+    padding-left: 20px;
+}
+
+.level2Link {
+    display: block;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #555;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+.level2Link:hover {
+    background-color: #e8e8e8;
+}
+
+/* === 反白 (Active) 樣式 === */
+.active {
+    background-color: #007bff; /* 藍色背景 */
+    color: white !important;
+}
+.activeText {
+    color: white !important;
+}
+.active {
+    color: white;
+}
+.toggleIcon {
+    margin-left: auto; /* 推到最右邊 */
+    padding-left: 10px;
+    cursor: pointer; /* 箭頭必須可點擊 */
+}
+/* === 手機版專屬樣式 === */
+.closeBtn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .menuNav {
+        padding-top: 50px; /* 預留給手機版關閉按鈕空間 */
+        background-color: #f4f4f4;
+        height: 100%;
+    }
+    .closeBtn {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        cursor: pointer;
+        z-index: 1001;
+    }
+}

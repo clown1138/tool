@@ -1,6 +1,10 @@
+// app/layout.tsx
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// 假設您的字體導入方式正確
+import { Geist, Geist_Mono } from "next/font/google"; 
 import "./globals.css";
+// 確保路徑正確
+import MenuLayout from '../components/MenuLayout'; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-   
+        {/* 修正點 1：MenuLayout 必須包裹 children */}
+        <MenuLayout>
+            {/* 修正點 2：將頁面內容 {children} 傳遞給 MenuLayout */}
+            {children}
+        </MenuLayout>
       </body>
     </html>
   );

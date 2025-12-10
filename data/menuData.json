@@ -1,0 +1,21 @@
+[
+    {
+      "id": 1,
+      "name": "工具",
+      "path": "/tools",
+      "icon": "🔧",
+      "children": [
+        { "id": 101, "name": "輪盤", "path": "/tools/Rotate" }
+      ]
+    },
+
+    {
+      "id": 3,
+      "name": "展示",
+      "path": "/demos",
+      "icon": "🎨",
+      "children": [
+        { "id": 301, "name": "轉場投影片", "path": "/demos/slider" }
+      ]
+    }
+  ]

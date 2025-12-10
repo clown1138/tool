@@ -1,0 +1,117 @@
+/* styles/Layout.module.css */
+
+/* === 桌面版預設 (Desktop First) === */
+
+.header {
+    height: 60px;
+    background-color: #333;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    grid-area: header;
+}
+.title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* --- 首頁佈局 (/ 時) --- */
+.homeLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.homeContent {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center; /* 首頁內容居中 */
+    align-items: center;
+    font-size: 2em;
+    color: #555;
+}
+
+/* --- 分頁佈局 (/tools, /games 時) --- */
+.pageLayout {
+    display: grid;
+    /* 定義網格區域: header | sidebar content */
+    grid-template-areas: 
+        "header header"
+        "sidebar content";
+    grid-template-rows: 60px 1fr;
+    min-height: 100vh;
+}
+
+/* 側邊欄樣式 */
+.sidebar {
+    grid-area: sidebar;
+    background-color: #f4f4f4;
+    overflow-y: auto;
+    width: 250px; /* 桌面預設寬度 */
+    transition: width 0.3s, transform 0.3s;
+}
+
+/* 側邊欄 開/關 狀態控制 */
+.sidebarOpen {
+    grid-template-columns: 250px 1fr; /* 桌面：展開 */
+}
+.sidebarClosed {
+    grid-template-columns: 0 1fr; /* 桌面：隱藏 (寬度為 0) */
+}
+
+/* 內容區 */
+.pageContent {
+    grid-area: content;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+/* 側邊欄開關按鈕 (桌面/分頁) */
+.sidebarToggleBtn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+    margin-right: 15px;
+    padding: 5px;
+}
+
+
+/* === 手機版 (RWD) 樣式 === */
+
+@media (max-width: 768px) {
+    
+    /* --- 首頁佈局 (不變) --- */
+    
+    /* --- 分頁佈局 --- */
+    .pageLayout {
+        /* 手機分頁：側邊欄始終隱藏在內容下方 */
+        grid-template-areas: 
+            "header"
+            "content";
+        grid-template-columns: 1fr;
+    }
+    
+    /* 側邊欄樣式 (手機版變成疊加在內容上方的抽屜) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 70%; /* 手機展開寬度 */
+        z-index: 1000;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+        transform: translateX(-100%); /* 預設完全隱藏 */
+    }
+
+    /* 手機側邊欄展開狀態 */
+    .sidebarOpen .sidebar {
+        transform: translateX(0);
+    }
+    
+    /* 手機模式下，內容區沒有邊距，且不需要 grid-area */
+    .pageContent {
+        padding: 15px;
+    }
+}
