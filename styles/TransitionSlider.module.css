@@ -1,0 +1,274 @@
+/* styles/TransitionSlider.module.css */
+
+/* 容器樣式 */
+.sliderContainer {
+    position: relative;
+    width: 900px; 
+    height: 500px;
+    overflow: hidden;
+    margin: 50px auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.5s ease-out; 
+    isolation: isolate; /* 讓背景 pseudo 與內容分層 */
+  }
+  
+  /* 內容區塊 */
+  .slideContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 40px;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  
+  /* 圖片樣式 */
+  .characterImage {
+    width: 40%;
+    height: 100%;
+    object-fit: contain;
+    margin-right: 40px;
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  /* 文字區塊 */
+  .textArea {
+    color: white;
+    width: 60%;
+  }
+  
+  .characterName {
+    font-size: 3em;
+    margin-bottom: 15px;
+    transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+  }
+  
+  .description {
+    font-size: 1.2em;
+    line-height: 1.6;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+  }
+  
+  /* === 遮罩動畫核心 === */
+  
+.transitionMask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 220%;
+    height: 220%;
+    background-color: #f7f7f7; 
+    z-index: 5; /* 在內容之上，但可被移出視口 */
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: opacity 0.6s ease;
+  }
+  
+  /* 啟動轉場時的狀態：將遮罩滑過畫面 */
+.transitionStart {
+    opacity: 1;
+  }
+  
+  /* === 內容進出場動畫 (配合遮罩) === */
+  
+  /* 內容退場 (使用 :global 確保我們能控制 Next.js 的 Image/元件內的樣式) */
+  .contentExit .characterName {
+    opacity: 0;
+  }
+  .contentExit .description {
+    opacity: 0;
+  }
+  .contentExit .characterImage {
+    opacity: 0;
+  }
+  /* styles/TransitionSlider.module.css (新增部分) */
+
+/* ... (原有樣式保持不變，只在文件底部新增以下部分) ... */
+
+.controlsContainer {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .nextButton {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+    background-color: #555;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+  }
+  
+  .nextButton:hover:not(:disabled) {
+    background-color: #0070f3; /* 點擊時的高亮顏色 */
+  }
+  
+  .nextButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  /* styles/TransitionSlider.module.css (修正和新增部分) */
+
+/* ... (原有樣式保持不變) ... */
+
+.fadeIn {
+    opacity: 0;
+    animation: fadeIn 0.8s forwards;
+  }
+.fadeOut {
+    opacity: 1;
+    animation: fadeOut 0.8s forwards;
+  }
+  
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+  
+  /* 確保 Slide Content 本身是可見的 */
+  .slideContent {
+    /* ... (原有樣式) ... */
+    transition: opacity 0.1s; /* 避免整個內容層閃爍 */
+    position: absolute;
+    inset: 0;
+    z-index: 10; /* 確保在遮罩之上，遮罩移出後可見 */
+    display: flex;
+    align-items: flex-start; /* 圖片置頂 */
+    padding: 40px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  /* 60% 圓餅旋轉動畫 */
+  .pieOverlay {
+    position: absolute;
+    bottom: 0; /* 圓心貼底邊 */
+    left: 50%;
+    width: 2200px;
+    height: 2200px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--pie-color, rgba(255, 255, 255, 0.95)) 0deg 288deg,
+      transparent 288deg 360deg
+    );
+    transform: translate(-50%, 50%) rotate(-18deg); /* 缺口在上方 */
+    transition: transform 0.8s ease, background 0.8s ease;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .pieRotate {
+    transform: translate(-50%, 50%) rotate(90deg); /* 轉一圈回到上方 */
+    background: conic-gradient(
+      color-mix(in srgb, var(--pie-color, rgba(255, 255, 255, 0.95)) 80%, white 20%) 0deg 288deg,
+      transparent 288deg 360deg
+    );
+  }
+
+  /* 版型：奇數（圖左文右） */
+  .layoutLeft {
+    flex-direction: row;
+  }
+  .layoutLeft .characterImage {
+    margin-right: 40px;
+    margin-left: 0;
+  }
+  .layoutLeft .textArea {
+    text-align: left;
+    margin-left: 0;
+  }
+  .layoutLeft::after {
+    /* 斜線：由中間偏下往左上，角度約 8 度 */
+    content: "";
+    position: absolute;
+    bottom: -18%;
+    left: 44%;
+    width: 2px;
+    height: 150%;
+    background: rgba(255, 255, 255, 0);
+    transform: rotate(-8deg);
+    z-index: 9;
+    pointer-events: none;
+  }
+
+  /* 版型：偶數（圖右文左） */
+  .layoutRight {
+    flex-direction: row-reverse;
+  }
+  .layoutRight .characterImage {
+    margin-left: 40px;
+    margin-right: 0;
+  }
+  .layoutRight::after {
+    /* 斜線：由中間偏下往右上，角度約 8 度（反向） */
+    content: "";
+    position: absolute;
+    bottom: -18%;
+    right: 44%;
+    width: 2px;
+    height: 150%;
+    background: rgba(255, 255, 255, 0);
+    transform: rotate(8deg);
+    z-index: 9;
+    pointer-events: none;
+  }
+
+/* 背景圖：奇偶不同側 */
+.bgLeft::before,
+.bgRight::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.85;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+/* 左側背景只佔左半，不跨過分隔線 */
+.bgLeft::before {
+    left: 0;
+    right: 0;
+    /* 以白線為界：線從中間偏下往左上，約 -8 度 */
+    /* clip-path: polygon(
+      0 0,
+      32% 0,
+      55% 100%,
+      0 100%
+    ); */
+}
+
+/* 右側背景只佔右半，不跨過分隔線 */
+.bgRight::before {
+    left: 0;
+    right: 0;
+    /* 以白線為界：線從中間偏下往右上，約 +8 度 */
+    /* clip-path: polygon(
+      45% 0,
+      100% 0,
+      100% 100%,
+      68% 100%
+    ); */
+}
+  .layoutRight .textArea {
+    text-align: left;
+    margin-right: 0;
+  }
