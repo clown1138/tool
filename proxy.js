@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
 
-export function middleware(request) {
-  // 取得角色
+export default function proxy(request) {
   const role = request.cookies.get('user-role')?.value;
   const { pathname } = request.nextUrl;
 
   const permissions = {
-    '/analyze/koo-phio': ['admin'],
+    '/koo-phio': ['admin'],
     '/demos/slider': ['admin', 'editor'],
     '/tools/Rotate': ['admin', 'editor', 'user'],
   };
@@ -28,10 +27,11 @@ export function middleware(request) {
   return NextResponse.next();
 }
 
+// 這個部分保持不變
 export const config = {
   matcher: [
     '/demos/:path*', 
     '/tools/:path*', 
-    '/analyze/:path*'
+    '/koo-phio/:path*'
   ],
 };
