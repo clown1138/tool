@@ -1,9 +1,7 @@
-// components/MenuTree.tsx (修正後的邏輯)
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../styles/MenuTree.module.css';
 
-// 假設的類型定義
 interface MenuItem {
     id: number;
     name: string;
@@ -20,7 +18,16 @@ interface MenuTreeProps {
 
 const MenuTree: React.FC<MenuTreeProps> = ({ menuData, currentPath, toggleSidebar }) => {
     const [openItemId, setOpenItemId] = useState<number | null>(null);
-
+    useEffect(() => {
+        menuData.forEach(item => {
+            if (item.children) {
+                const hasActiveChild = item.children.some(child => child.path === currentPath);
+                if (hasActiveChild) {
+                    setOpenItemId(item.id); 
+                }
+            }
+        });
+    }, [currentPath, menuData]);
     const isCurrent = (path: string) => currentPath === path;
 
     return (
@@ -31,9 +38,8 @@ const MenuTree: React.FC<MenuTreeProps> = ({ menuData, currentPath, toggleSideba
                 {menuData.map(item => {
                     const hasChildren = !!item.children && item.children.length > 0;
                     
-                    // 展開/收合的函式
                     const handleToggle = (e: React.MouseEvent) => {
-                        e.preventDefault(); // 阻止任何父層或 Link 的默認行為
+                        e.preventDefault();
                         setOpenItemId(openItemId === item.id ? null : item.id);
                     };
 
@@ -41,22 +47,14 @@ const MenuTree: React.FC<MenuTreeProps> = ({ menuData, currentPath, toggleSideba
                         <li key={item.id} className={styles.level1Item}>
                             <div className={styles.level1Link}> 
                                 <span>{item.icon}</span>
-                                
-                                {/* 核心修正：
-                                    如果 hasChildren: Link 點擊僅執行 toggleSidebar，並阻止導航。
-                                    如果沒有子項目: Link 點擊執行 toggleSidebar 並允許導航。
-                                */}
                                 <Link 
                                     href={item.path} 
                                     className={`${styles.level1Text} ${isCurrent(item.path) ? styles.activeText : ''}`}
-                                    // 點擊 Link 時執行的函式
                                     onClick={(e) => {
                                         if (hasChildren) {
-                                            // 有子項目時：阻止導航，只執行展開/收合
                                             e.preventDefault();
                                             handleToggle(e);
                                         } else {
-                                            // 無子項目時：允許導航，但執行手機側邊欄收合
                                             toggleSidebar();
                                         }
                                     }}
@@ -64,7 +62,6 @@ const MenuTree: React.FC<MenuTreeProps> = ({ menuData, currentPath, toggleSideba
                                     {item.name}
                                 </Link>
 
-                                {/* 展開箭頭/圖標的點擊區 */}
                                 {hasChildren && (
                                     <span onClick={handleToggle} className={styles.toggleIcon}>
                                         {openItemId === item.id ? '▲' : '▼'}
@@ -72,7 +69,6 @@ const MenuTree: React.FC<MenuTreeProps> = ({ menuData, currentPath, toggleSideba
                                 )}
                             </div>
 
-                            {/* 第二層選單 (僅在有子項目時渲染) */}
                             {hasChildren && (
                                 <ul className={`${styles.level2} ${openItemId === item.id ? styles.open : ''}`}>
                                     {item.children!.map(child => (

@@ -1,10 +1,9 @@
-/* styles/HomeMenu.module.css */
 
 .homeMenuContainer {
     width: 100%;
-    max-width: 800px; /* 限制最大寬度，避免在電腦螢幕上過寬 */
+    max-width: 800px; 
     padding: 20px;
-    text-align: center; /* 內容居中 */
+    text-align: center; 
 }
 
 .title {
@@ -19,17 +18,16 @@
     margin-bottom: 40px;
 }
 
-/* --- 第一層樣式 --- */
 .level1List {
     list-style: none;
     padding: 0;
     display: flex;
-    justify-content: center; /* 一級分類在桌面居中排列 */
+    justify-content: center; 
     gap: 30px;
 }
 
 .level1Item {
-    flex: 1; /* 讓每個一級項目平均分配空間 */
+    flex: 1;
     min-width: 200px;
     max-width: 250px;
     background-color: #f8f8f8;
@@ -49,7 +47,6 @@
     margin-bottom: 15px;
 }
 
-/* --- 第二層樣式 --- */
 .level2List {
     list-style: none;
     padding: 0;
@@ -74,10 +71,9 @@
     color: white;
 }
 
-/* === RWD 修正 (手機時垂直堆疊) === */
 @media (max-width: 768px) {
     .level1List {
-        flex-direction: column; /* 手機上垂直堆疊 */
+        flex-direction: column; 
         gap: 20px;
     }
 

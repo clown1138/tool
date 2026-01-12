@@ -1,21 +1,41 @@
 [
-    {
-      "id": 1,
-      "name": "工具",
-      "path": "/tools",
-      "icon": "🔧",
-      "children": [
-        { "id": 101, "name": "輪盤", "path": "/tools/Rotate" }
-      ]
-    },
-
-    {
-      "id": 3,
-      "name": "展示",
-      "path": "/demos",
-      "icon": "🎨",
-      "children": [
-        { "id": 301, "name": "轉場投影片", "path": "/demos/slider" }
-      ]
-    }
-  ]
+  {
+    "id": 1,
+    "name": "工具",
+    "path": "/tools",
+    "icon": "🔧",
+    "children": [
+      { 
+        "id": 101, 
+        "name": "輪盤", 
+        "path": "/tools/Rotate",
+        "roles": ["admin", "editor", "user"] 
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "展示",
+    "path": "/demos",
+    "icon": "🎨",
+    "roles": ["admin", "editor"], 
+    "children": [
+      { 
+        "id": 301, 
+        "name": "轉場投影片", 
+        "path": "/demos/slider",
+        "roles": ["admin", "editor"]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "管理",
+    "path": "/analyze",
+    "icon": "🎨",
+    "roles": ["admin"], 
+    "children": [
+      { "id": 401, "name": "核心檔案", "path": "/analyze/koo-phio", "roles": ["admin"] }
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+import { NextResponse } from 'next/server';
+
+export function middleware(request) {
+  // 取得角色
+  const role = request.cookies.get('user-role')?.value;
+  const { pathname } = request.nextUrl;
+
+  const permissions = {
+    '/analyze/koo-phio': ['admin'],
+    '/demos/slider': ['admin', 'editor'],
+    '/tools/Rotate': ['admin', 'editor', 'user'],
+  };
+
+  const pathKey = Object.keys(permissions).find(path => pathname.startsWith(path));
+
+  if (pathKey) {
+    const allowedRoles = permissions[pathKey];
+
+    if (!role) {
+      return NextResponse.redirect(new URL('/?auth_error=not_logged_in', request.url));
+    }
+
+    if (!allowedRoles.includes(role)) {
+      return NextResponse.redirect(new URL('/?auth_error=no_permission', request.url));
+    }
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    '/demos/:path*', 
+    '/tools/:path*', 
+    '/analyze/:path*'
+  ],
+};
