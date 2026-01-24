@@ -4,7 +4,11 @@ import Script from 'next/script';
 
 export default function TattooAnchorAR() {
   const [isLoaded, setIsLoaded] = useState(false);
-
+  const AScene = 'a-scene' as any;
+  const AAssets = 'a-assets' as any;
+  const ACamera = 'a-camera' as any;
+  const AEntity = 'a-entity' as any;
+  const APlane = 'a-plane' as any;
   // 監測 A-Frame 和 MindAR 是否真的準備好了
   useEffect(() => {
     const timer = setInterval(() => {
@@ -41,35 +45,27 @@ export default function TattooAnchorAR() {
         strategy="afterInteractive"
       />
 
-      {isLoaded && (
-        <a-scene 
-          mindar-image="imageTargetSrc: /targets.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: #scanning-overlay;" 
+{isLoaded && (
+        <AScene 
+          mindar-image="imageTargetSrc: /targets.mind; autoStart: true; ..." 
           embedded
-          color-space="sRGB" 
-          renderer="colorManagement: true, physicallyCorrectLights" 
-          vr-mode-ui="enabled: false" 
-          device-orientation-permission-ui="enabled: false"
         >
-            <div id="scanning-overlay" className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
-                <div className="w-64 h-64 border-4 border-dashed border-white opacity-50 animate-pulse"></div>
-            </div>
-          <a-assets>
-            <img id="tattooTexture" src="/tattoos/test001.png" />
-          </a-assets>
+          <AAssets>
+            <img id="tattooTexture" src="/tattoos/your-tattoo.png" />
+          </AAssets>
 
-          <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+          <ACamera position="0 0 0" look-controls="enabled: false"></ACamera>
 
-          <a-entity mindar-image-target="targetIndex: 0">
-            <a-plane 
+          <AEntity mindar-image-target="targetIndex: 0">
+            <APlane 
               src="#tattooTexture" 
               position="0 0 0" 
               height="1" 
               width="1" 
               transparent="true" 
-              opacity="0.9"
-            ></a-plane>
-          </a-entity>
-        </a-scene>
+            />
+          </AEntity>
+        </AScene>
       )}
 
       {!isLoaded && (
