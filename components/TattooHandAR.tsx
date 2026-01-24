@@ -3,18 +3,35 @@ import React, { useEffect, useState } from 'react';
 import Script from 'next/script';
 
 export default function TattooAnchorAR() {
-  const [hasMounted, setHasMounted] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // 監測 A-Frame 和 MindAR 是否真的準備好了
   useEffect(() => {
-    setHasMounted(true);
+    const timer = setInterval(() => {
+      if ((window as any).AFRAME && (window as any).MINDAR) {
+        setIsLoaded(true);
+        clearInterval(timer);
+      }
+    }, 500);
+    return () => clearInterval(timer);
   }, []);
-
-  if (!hasMounted) {
-    return <div className="w-full h-screen bg-black" />;
-  }
-
+  useEffect(() => {
+    const sceneEl = document.querySelector('a-scene');
+    const targetEl = document.querySelector('a-entity[mindar-image-target]');
+  
+    if (targetEl) {
+      targetEl.addEventListener("targetFound", event => {
+        console.log("找到錨點了！");
+        // alert("偵測成功！"); // 測試用，成功後會跳通知
+      });
+  
+      targetEl.addEventListener("targetLost", event => {
+        console.log("錨點消失了");
+      });
+    }
+  }, [isLoaded]);
   return (
-    <div className="w-full h-screen bg-black overflow-hidden">
+    <div className="ar-wrapper">
       <Script 
         src="https://aframe.io/releases/1.4.2/aframe.min.js" 
         strategy="beforeInteractive"
@@ -24,44 +41,82 @@ export default function TattooAnchorAR() {
         strategy="afterInteractive"
       />
 
-      <div 
-        className="w-full h-full"
-        dangerouslySetInnerHTML={{
-          __html: `
-            <a-scene 
-              mindar-image="imageTargetSrc: /targets.mind; filterMinCF:0.001; filterBeta: 10" 
-              color-space="sRGB" 
-              renderer="colorManagement: true, physicallyCorrectLights" 
-              vr-mode-ui="enabled: false" 
-              device-orientation-permission-ui="enabled: false"
-            >
-              <a-assets>
-                <img id="tattooTexture" src="/tattoos/test001.png" />
-              </a-assets>
+      {isLoaded && (
+        <a-scene 
+          mindar-image="imageTargetSrc: /targets.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: #scanning-overlay;" 
+          embedded
+          color-space="sRGB" 
+          renderer="colorManagement: true, physicallyCorrectLights" 
+          vr-mode-ui="enabled: false" 
+          device-orientation-permission-ui="enabled: false"
+        >
+            <div id="scanning-overlay" className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
+                <div className="w-64 h-64 border-4 border-dashed border-white opacity-50 animate-pulse"></div>
+            </div>
+          <a-assets>
+            <img id="tattooTexture" src="/tattoos/test001.png" />
+          </a-assets>
 
-              <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+          <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-              <a-entity mindar-image-target="targetIndex: 0">
-                <a-plane 
-                  src="#tattooTexture" 
-                  position="0 0 0" 
-                  height="1" 
-                  width="1" 
-                  transparent="true" 
-                  opacity="0.9"
-                  rotation="0 0 0"
-                ></a-plane>
-              </a-entity>
-            </a-scene>
-          `
-        }}
-      />
-      
-      <div className="absolute bottom-10 left-0 w-full text-center text-white z-50 pointer-events-none">
-        <p className="bg-black/50 inline-block px-4 py-2 rounded-full">
-          請掃描刺青錨點圖案
-        </p>
-      </div>
+          <a-entity mindar-image-target="targetIndex: 0">
+            <a-plane 
+              src="#tattooTexture" 
+              position="0 0 0" 
+              height="1" 
+              width="1" 
+              transparent="true" 
+              opacity="0.9"
+            ></a-plane>
+          </a-entity>
+        </a-scene>
+      )}
+
+      {!isLoaded && (
+        <div className="loading-screen">
+          <p>準備相機中...</p>
+        </div>
+      )}
+
+      <style jsx>{`
+        .ar-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: black;
+          z-index: 999;
+        }
+        .loading-screen {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          color: white;
+          font-family: sans-serif;
+        }
+      `}</style>
+
+      {/* 關鍵：強制讓 A-Frame 的底層 Video 顯示出來 */}
+      <style jsx global>{`
+        body { margin: 0; overflow: hidden; }
+        .a-canvas {
+          width: 100% !important;
+          height: 100% !important;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+        video {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover;
+        }
+      `}</style>
     </div>
   );
 }
