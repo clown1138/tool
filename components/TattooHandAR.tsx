@@ -47,9 +47,13 @@ export default function TattooAnchorAR() {
 
 {isLoaded && (
         <AScene 
-          mindar-image="imageTargetSrc: /targets.mind; autoStart: true; ..." 
-          embedded
-        >
+        mindar-image="imageTargetSrc: /targets.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: no;"
+        embedded
+        color-space="sRGB"
+        renderer="colorManagement: true, physicallyCorrectLights"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+      >
           <AAssets>
             <img id="tattooTexture" src="/tattoos/your-tattoo.png" />
           </AAssets>
@@ -105,14 +109,18 @@ export default function TattooAnchorAR() {
           left: 0;
         }
         video {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100% !important;
-          height: 100% !important;
-          object-fit: cover;
-        }
-      `}</style>
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        z-index: -1; /* 讓它在 A-Frame Canvas 下方但看得見 */
+    }
+    .a-canvas {
+        z-index: 1;
+    }
+    `}</style>
     </div>
   );
 }
