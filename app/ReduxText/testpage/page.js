@@ -96,7 +96,11 @@ export default function App() {
         >
           CLICK: {count}
         </Button>
-        <Button onClick={() => dispatch(clear())}>
+        <Button onClick={() => {
+            if (!isDisabled) {
+              dispatch(clear());
+            }
+          }}>
           CLEAR
         </Button>
         <Button onClick={() => dispatch(toggleDisabled())}>
