@@ -45,7 +45,7 @@ export default function App() {
           {
             method: "GET",
             headers: {
-              apikey: process.env.NEXT_PUBLIC_FIXER_API_KEY, 
+              apikey: process.env.NEXT_PUBLIC_FIXER_API, 
             },
           }
         );
