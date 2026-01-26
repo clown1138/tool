@@ -97,9 +97,9 @@ export default function App() {
           CLICK: {count}
         </Button>
         <Button onClick={() => {
-            if (!isDisabled) {
+            // if (!isDisabled) {
               dispatch(clear());
-            }
+            // }
           }}>
           CLEAR
         </Button>
